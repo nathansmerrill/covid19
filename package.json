@@ -1,0 +1,15 @@
+{
+    "name": "covid19",
+    "version": "0.0.1",
+    "author": "Nathan Merrill <mathiscool3000@gmail.com>",
+    "license": "MIT",
+    "scripts": {
+        "start": "parcel src/index.html --port 4000",
+        "build": "parcel build src/index.html --public-url ./"
+    },
+    "dependencies": {
+        "p5": "^1.0.0",
+        "parcel-bundler": "^1.12.4",
+        "parcel-plugin-clean-dist": "^0.0.6"
+    }
+}
