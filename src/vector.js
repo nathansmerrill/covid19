@@ -22,8 +22,8 @@ export default class Vector {
     }
 
     multiply(value) {
-        self.x *= value;
-        self.y *= value;
+        this.x *= value;
+        this.y *= value;
     }
 
     divide(value) {
