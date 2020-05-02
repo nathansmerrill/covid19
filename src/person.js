@@ -7,7 +7,7 @@ import {
     MAX_SPAWN_VEL,
     SEPARATION_STRENGTH,
     SEPARATION_THRESHOLD,
-    SPEED_LIMIT
+    SPEED_LIMIT, TRANSMISSION_RATE
 } from "./config";
 
 const leftWind = new Vector(BORDER_WIND_STRENGTH, 0);
@@ -41,11 +41,11 @@ export default class Person {
         // Separation
         for (let person of people) {
             let personToSelf = person.pos.vectorTo(this.pos);
-            if (personToSelf.len() <= SEPARATION_THRESHOLD) {
-                if (person.infected) {
+            let originalLength = personToSelf.len();
+            if (originalLength <= SEPARATION_THRESHOLD) {
+                if (person.infected && TRANSMISSION_RATE(originalLength)) {
                     this.infected = true;
                 }
-                let originalLength = personToSelf.len();
                 personToSelf.normalize();
                 personToSelf.divide(originalLength);
                 personToSelf.multiply(SEPARATION_STRENGTH);
