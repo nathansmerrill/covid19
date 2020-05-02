@@ -42,6 +42,9 @@ export default class Person {
         for (let person of people) {
             let personToSelf = person.pos.vectorTo(this.pos);
             if (personToSelf.len() <= SEPARATION_THRESHOLD) {
+                if (person.infected) {
+                    this.infected = true;
+                }
                 let originalLength = personToSelf.len();
                 personToSelf.normalize();
                 personToSelf.divide(originalLength);
