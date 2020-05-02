@@ -1,7 +1,12 @@
 import Vector from "./vector";
 import Point from "./point";
 import {randInt, randUniform} from "./utils";
-import {MAX_SPAWN_VEL} from "./config";
+import {BORDER_WIND_MARGIN, BORDER_WIND_STRENGTH, MAX_SPAWN_VEL, SPEED_LIMIT} from "./config";
+
+const leftWind = new Vector(BORDER_WIND_STRENGTH, 0);
+const rightWind = new Vector(-BORDER_WIND_STRENGTH, 0);
+const topWind = new Vector(0, BORDER_WIND_STRENGTH);
+const bottomWind = new Vector(0, -BORDER_WIND_STRENGTH);
 
 export default class Person {
     constructor(infected) {
@@ -11,7 +16,28 @@ export default class Person {
         this.wasInfected = false;
     }
 
-    update(boids) {
+    update(people) {
+        // Avoid edges
+        if (this.pos.x <= BORDER_WIND_MARGIN) {
+            this.vel.add(leftWind);
+        }
+        if (this.pos.x >= innerWidth - BORDER_WIND_MARGIN) {
+            this.vel.add(rightWind);
+        }
+        if (this.pos.y <= BORDER_WIND_MARGIN) {
+            this.vel.add(topWind);
+        }
+        if (this.pos.y >= innerHeight - BORDER_WIND_MARGIN) {
+            this.vel.add(bottomWind);
+        }
+
+        // Speed Limit
+        if (this.vel.len() > SPEED_LIMIT) {
+            this.vel.normalize(SPEED_LIMIT);
+        }
+    }
+
+    move() {
         this.pos.move(this.vel);
     }
 

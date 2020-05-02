@@ -19,6 +19,9 @@ function update() {
     for (let person of people) {
         person.update(people);
     }
+    for (let person of people) {
+        person.move();
+    }
 }
 
 export function draw() {
