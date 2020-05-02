@@ -1,7 +1,14 @@
 import Vector from "./vector";
 import Point from "./point";
 import {randInt, randUniform} from "./utils";
-import {BORDER_WIND_MARGIN, BORDER_WIND_STRENGTH, MAX_SPAWN_VEL, SPEED_LIMIT} from "./config";
+import {
+    BORDER_WIND_MARGIN,
+    BORDER_WIND_STRENGTH,
+    MAX_SPAWN_VEL,
+    SEPARATION_STRENGTH,
+    SEPARATION_THRESHOLD,
+    SPEED_LIMIT
+} from "./config";
 
 const leftWind = new Vector(BORDER_WIND_STRENGTH, 0);
 const rightWind = new Vector(-BORDER_WIND_STRENGTH, 0);
@@ -29,6 +36,18 @@ export default class Person {
         }
         if (this.pos.y >= innerHeight - BORDER_WIND_MARGIN) {
             this.vel.add(bottomWind);
+        }
+
+        // Separation
+        for (let person of people) {
+            let personToSelf = person.pos.vectorTo(this.pos);
+            if (personToSelf.len() <= SEPARATION_THRESHOLD) {
+                let originalLength = personToSelf.len();
+                personToSelf.normalize();
+                personToSelf.divide(originalLength);
+                personToSelf.multiply(SEPARATION_STRENGTH);
+                this.vel.add(personToSelf);
+            }
         }
 
         // Speed Limit
