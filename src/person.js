@@ -2,8 +2,10 @@ import Vector from "./vector";
 import Point from "./point";
 import {randInt, randUniform} from "./utils";
 import {
+    ALIGNMENT_STRENGTH,
+    ALIGNMENT_THRESHOLD,
     BORDER_WIND_MARGIN,
-    BORDER_WIND_STRENGTH,
+    BORDER_WIND_STRENGTH, COHESION_STRENGTH, COHESION_THRESHOLD,
     MAX_SPAWN_VEL,
     SEPARATION_STRENGTH,
     SEPARATION_THRESHOLD,
@@ -52,6 +54,38 @@ export default class Person {
                 this.vel.add(personToSelf);
             }
         }
+
+        // Alignment
+        let averageVel = new Vector(0, 0);
+        let alignmentCounter = 0;
+        for (let person of people) {
+            if (person.pos.vectorTo(this.pos).len() <= ALIGNMENT_THRESHOLD) {
+                averageVel.add(person.vel);
+                alignmentCounter += 1;
+            }
+        }
+        averageVel.divide(alignmentCounter);
+        averageVel.multiply(ALIGNMENT_STRENGTH);
+        this.vel.add(averageVel);
+
+        // Cohesion
+        let averageX = 0;
+        let averageY = 0;
+        let cohesionCounter = 0;
+        for (let person of people) {
+            if (person.pos.vectorTo(this.pos).len() <= COHESION_THRESHOLD) {
+                averageX += person.pos.x;
+                averageY += person.pos.y;
+                cohesionCounter++;
+            }
+        }
+        if (cohesionCounter !== 0) {
+            averageX /= cohesionCounter;
+            averageY /= cohesionCounter;
+        }
+        let cohesionVector = this.pos.vectorTo(new Point(averageX, averageY));
+        cohesionVector.multiply(COHESION_STRENGTH);
+        this.vel.add(cohesionVector);
 
         // Speed Limit
         if (this.vel.len() > SPEED_LIMIT) {
