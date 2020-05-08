@@ -2,14 +2,18 @@ import Vector from "./vector";
 import Point from "./point";
 import {randInt, randUniform} from "./utils";
 import {
-    ALIGNMENT_STRENGTH,
-    ALIGNMENT_THRESHOLD,
-    BORDER_WIND_MARGIN,
-    BORDER_WIND_STRENGTH, COHESION_STRENGTH, COHESION_THRESHOLD,
     MAX_SPAWN_VEL,
-    SEPARATION_STRENGTH,
+    BORDER_WIND_MARGIN,
+    BORDER_WIND_STRENGTH,
     SEPARATION_THRESHOLD,
-    SPEED_LIMIT, TRANSMISSION_RATE
+    SEPARATION_STRENGTH,
+    ALIGNMENT_THRESHOLD,
+    ALIGNMENT_STRENGTH,
+    COHESION_THRESHOLD,
+    COHESION_STRENGTH,
+    SPEED_LIMIT,
+    TRANSMISSION_RATE,
+    RECOVERY_TIME
 } from "./config";
 
 const leftWind = new Vector(BORDER_WIND_STRENGTH, 0);
@@ -18,7 +22,8 @@ const topWind = new Vector(0, BORDER_WIND_STRENGTH);
 const bottomWind = new Vector(0, -BORDER_WIND_STRENGTH);
 
 export default class Person {
-    constructor(infected) {
+    constructor(infected, id) {
+        this.id = id;
         this.pos = new Point(randInt(0, innerWidth), randInt(0, innerHeight));
         this.vel = new Vector(randUniform(-MAX_SPAWN_VEL, MAX_SPAWN_VEL), randUniform(-MAX_SPAWN_VEL, MAX_SPAWN_VEL));
         this.infected = infected;
@@ -26,6 +31,15 @@ export default class Person {
     }
 
     update(people) {
+        // Recovery
+        if (this.infected) {
+            if (new Date() - this.infected >= RECOVERY_TIME) {
+                console.log('i recovered');
+                this.infected = null;
+                this.wasInfected = true;
+            }
+        }
+
         // Avoid edges
         if (this.pos.x <= BORDER_WIND_MARGIN) {
             this.vel.add(leftWind);
@@ -45,8 +59,8 @@ export default class Person {
             let personToSelf = person.pos.vectorTo(this.pos);
             let originalLength = personToSelf.len();
             if (originalLength <= SEPARATION_THRESHOLD) {
-                if (person.infected && TRANSMISSION_RATE(originalLength)) {
-                    this.infected = true;
+                if (person.infected && !this.infected && !this.wasInfected && TRANSMISSION_RATE(originalLength)) {
+                    this.infected = new Date();
                 }
                 personToSelf.normalize();
                 personToSelf.divide(originalLength);
@@ -69,9 +83,9 @@ export default class Person {
         this.vel.add(averageVel);
 
         // Cohesion
-        let averageX = 0;
-        let averageY = 0;
-        let cohesionCounter = 0;
+        let averageX = this.pos.x;
+        let averageY = this.pos.y;
+        let cohesionCounter = 1;
         for (let person of people) {
             if (person.pos.vectorTo(this.pos).len() <= COHESION_THRESHOLD) {
                 averageX += person.pos.x;
@@ -98,7 +112,7 @@ export default class Person {
     }
 
     draw() {
-        if (this.infected) {
+        if (this.infected !== null) {
             fill(255, 0, 0);
         } else {
             if (this.wasInfected) {
