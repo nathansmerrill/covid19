@@ -10,7 +10,7 @@ export const COHESION_STRENGTH = .02;
 export const SPEED_LIMIT = 4;
 export const RECOVERY_TIME = 5000;
 export const TRANSMISSION_RATE = dist => Math.random() <= 4 / dist;
-export const DEATH_RATE = 0.00013;
+export const DEATH_RATE = 0.0001;
 // y = 2^dist
 // export const TRANSMISSION_RATE = dist => {
     // let chance = 0.5/Math.pow(2, dist);
