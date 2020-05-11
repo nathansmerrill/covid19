@@ -13,6 +13,7 @@ import {
     COHESION_STRENGTH,
     SPEED_LIMIT,
     TRANSMISSION_RATE,
+    DEATH_RATE,
     RECOVERY_TIME
 } from "./config";
 
@@ -31,6 +32,11 @@ export default class Person {
     }
 
     update(people) {
+        // Death
+        if (this.infected && Math.random() < DEATH_RATE) {
+            return true;
+        }
+
         // Recovery
         if (this.infected) {
             if (new Date() - this.infected >= RECOVERY_TIME) {
@@ -105,6 +111,8 @@ export default class Person {
         if (this.vel.len() > SPEED_LIMIT) {
             this.vel.normalize(SPEED_LIMIT);
         }
+
+        return false;
     }
 
     move() {
