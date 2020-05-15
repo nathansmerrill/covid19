@@ -40,7 +40,6 @@ export default class Person {
         // Recovery
         if (this.infected) {
             if (new Date() - this.infected >= RECOVERY_TIME) {
-                console.log('i recovered');
                 this.infected = null;
                 this.wasInfected = true;
             }
