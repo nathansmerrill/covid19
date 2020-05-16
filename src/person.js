@@ -118,16 +118,16 @@ export default class Person {
         this.pos.move(this.vel);
     }
 
-    draw() {
+    draw(p) {
         if (this.infected !== null) {
-            fill(255, 0, 0);
+            p.fill(255, 0, 0);
         } else {
             if (this.wasInfected) {
-                fill(203, 30, 218);
+                p.fill(203, 30, 218);
             } else {
-                fill(170, 198, 202);
+                p.fill(170, 198, 202);
             }
         }
-        circle(this.pos.x, this.pos.y, 15);
+        p.circle(this.pos.x, this.pos.y, 15);
     }
 }

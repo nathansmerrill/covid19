@@ -1,0 +1,1 @@
+{"version":3,"sources":["main.css"],"names":[],"mappings":"AAAA,KACI,SAAU,CACV,QAAS,CACT,eACJ,CAEA,QACI,iBAAkB,CAClB,SACJ,CAEA,mBACI,UACJ","file":"main.4e3406d0.css","sourceRoot":"../src","sourcesContent":["body {\n    padding: 0;\n    margin: 0;\n    overflow: hidden;\n}\n\n.inputs {\n    position: relative;\n    top: 500px;\n}\n\ninput[type=\"number\"] {\n    width: 60px;\n}"]}

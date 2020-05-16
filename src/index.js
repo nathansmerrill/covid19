@@ -1,8 +1,11 @@
 import p5 from 'p5';
-import * as sketch from './sketch';
 
-for (let opt in sketch) {
-    window[opt] = sketch[opt]
+if (module.hot) {
+    module.hot.accept(function() {
+        window.location.reload();
+    });
 }
 
-new p5();
+import Sketch from './sketch';
+
+new p5(Sketch);
