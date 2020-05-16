@@ -1,61 +1,43 @@
 import Vector from "./vector";
 import Point from "./point";
 import {randInt, randUniform} from "./utils";
-import {
-    MAX_SPAWN_VEL,
-    BORDER_WIND_MARGIN,
-    BORDER_WIND_STRENGTH,
-    SEPARATION_THRESHOLD,
-    SEPARATION_STRENGTH,
-    ALIGNMENT_THRESHOLD,
-    ALIGNMENT_STRENGTH,
-    COHESION_THRESHOLD,
-    COHESION_STRENGTH,
-    SPEED_LIMIT,
-    TRANSMISSION_RATE,
-    DEATH_RATE,
-    RECOVERY_TIME
-} from "./config";
-
-const leftWind = new Vector(BORDER_WIND_STRENGTH, 0);
-const rightWind = new Vector(-BORDER_WIND_STRENGTH, 0);
-const topWind = new Vector(0, BORDER_WIND_STRENGTH);
-const bottomWind = new Vector(0, -BORDER_WIND_STRENGTH);
+import {TRANSMISSION_RATE} from "./config";
 
 export default class Person {
-    constructor(infected, id) {
-        this.id = id;
+    constructor(infected, maxSpawnVel) {
         this.pos = new Point(randInt(0, innerWidth), randInt(0, innerHeight));
-        this.vel = new Vector(randUniform(-MAX_SPAWN_VEL, MAX_SPAWN_VEL), randUniform(-MAX_SPAWN_VEL, MAX_SPAWN_VEL));
+        this.vel = new Vector(randUniform(-maxSpawnVel, maxSpawnVel), randUniform(-maxSpawnVel, maxSpawnVel));
         this.infected = infected;
         this.wasInfected = false;
     }
 
-    update(people) {
+    update(people, deathRate, recoveryTime, borderWindThreshold, leftWind, rightWind, topWind, bottomWind,
+           separationThreshold, separationStrength, /*transmissionRate,*/ alignmentThreshold, alignmentStrength,
+           cohesionThreshold, cohesionStrength, speedLimit) {
         // Death
-        if (this.infected && Math.random() < DEATH_RATE) {
+        if (this.infected && Math.random() < deathRate) {
             return true;
         }
 
         // Recovery
         if (this.infected) {
-            if (new Date() - this.infected >= RECOVERY_TIME) {
+            if (new Date() - this.infected >= recoveryTime) {
                 this.infected = null;
                 this.wasInfected = true;
             }
         }
 
         // Avoid edges
-        if (this.pos.x <= BORDER_WIND_MARGIN) {
+        if (this.pos.x <= borderWindThreshold) {
             this.vel.add(leftWind);
         }
-        if (this.pos.x >= innerWidth - BORDER_WIND_MARGIN) {
+        if (this.pos.x >= innerWidth - borderWindThreshold) {
             this.vel.add(rightWind);
         }
-        if (this.pos.y <= BORDER_WIND_MARGIN) {
+        if (this.pos.y <= borderWindThreshold) {
             this.vel.add(topWind);
         }
-        if (this.pos.y >= innerHeight - BORDER_WIND_MARGIN) {
+        if (this.pos.y >= innerHeight - borderWindThreshold) {
             this.vel.add(bottomWind);
         }
 
@@ -63,13 +45,13 @@ export default class Person {
         for (let person of people) {
             let personToSelf = person.pos.vectorTo(this.pos);
             let originalLength = personToSelf.len();
-            if (originalLength <= SEPARATION_THRESHOLD) {
+            if (originalLength <= separationThreshold) {
                 if (person.infected && !this.infected && !this.wasInfected && TRANSMISSION_RATE(originalLength)) {
                     this.infected = new Date();
                 }
                 personToSelf.normalize();
                 personToSelf.divide(originalLength);
-                personToSelf.multiply(SEPARATION_STRENGTH);
+                personToSelf.multiply(separationStrength);
                 this.vel.add(personToSelf);
             }
         }
@@ -78,13 +60,13 @@ export default class Person {
         let averageVel = new Vector(0, 0);
         let alignmentCounter = 0;
         for (let person of people) {
-            if (person.pos.vectorTo(this.pos).len() <= ALIGNMENT_THRESHOLD) {
+            if (person.pos.vectorTo(this.pos).len() <= alignmentThreshold) {
                 averageVel.add(person.vel);
                 alignmentCounter += 1;
             }
         }
         averageVel.divide(alignmentCounter);
-        averageVel.multiply(ALIGNMENT_STRENGTH);
+        averageVel.multiply(alignmentStrength);
         this.vel.add(averageVel);
 
         // Cohesion
@@ -92,7 +74,7 @@ export default class Person {
         let averageY = this.pos.y;
         let cohesionCounter = 1;
         for (let person of people) {
-            if (person.pos.vectorTo(this.pos).len() <= COHESION_THRESHOLD) {
+            if (person.pos.vectorTo(this.pos).len() <= cohesionThreshold) {
                 averageX += person.pos.x;
                 averageY += person.pos.y;
                 cohesionCounter++;
@@ -103,12 +85,12 @@ export default class Person {
             averageY /= cohesionCounter;
         }
         let cohesionVector = this.pos.vectorTo(new Point(averageX, averageY));
-        cohesionVector.multiply(COHESION_STRENGTH);
+        cohesionVector.multiply(cohesionStrength);
         this.vel.add(cohesionVector);
 
         // Speed Limit
-        if (this.vel.len() > SPEED_LIMIT) {
-            this.vel.normalize(SPEED_LIMIT);
+        if (this.vel.len() > speedLimit) {
+            this.vel.normalize(speedLimit);
         }
 
         return false;
