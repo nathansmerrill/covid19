@@ -6,6 +6,7 @@ export default p => {
     let people = [];
     let dead = [];
     let inputLabelY = 210;
+    let inputDefaultVals = [];
     let maxSpawnVelLabel, maxSpawnVelInput, borderWindThresholdLabel, borderWindThresholdInput,
         borderWindStrengthLabel, borderWindStrengthInput, startingInfectedLabel, startingInfectedInput,
         separationThresholdLabel, separationThresholdInput, separationStrengthLabel, separationStrengthInput,
@@ -19,7 +20,8 @@ export default p => {
         speedLimit, recoveryTime, transmissionRate, deathRate,
         leftWind, rightWind, topWind, bottomWind;
 
-    const genWinds = (borderWindStrength) => {
+    const genWinds = borderWindStrength => {
+        console.log(`Generating winds ${borderWindStrength}`);
         leftWind = new Vector(borderWindStrength, 0);
         rightWind = new Vector(-borderWindStrength, 0);
         topWind = new Vector(0, borderWindStrength);
@@ -48,6 +50,7 @@ export default p => {
             setVarFunc(initialVal);
             input.input(() => setVarFunc(input.value()));
         }
+        inputDefaultVals.push([input, initialVal]);
         const label = p.createElement('label', desc);
         label.position(80, inputLabelY);
         inputLabelY += 30;
@@ -75,6 +78,15 @@ export default p => {
         [recoveryTimeLabel, recoveryTimeInput] = createInputLabel('Recovery time', 5000, val => recoveryTime = val);
         [transmissionRateLabel, transmissionRateInput] = createInputLabel('Transmission rate', 100, val => transmissionRate = val);
         [deathRateLabel, deathRateInput] = createInputLabel('Death rate', .0001, val => deathRate = val);
+        const resetButton = p.createButton('Reset configuration');
+        resetButton.position(10, inputLabelY);
+        resetButton.mousePressed(() => {
+            console.log(inputDefaultVals);
+            for (let input of inputDefaultVals) {
+                input[0].value(input[1]);
+            }
+        });
+        inputLabelY += 30;
         const restartButton = p.createButton('Restart Simulation');
         restartButton.position(10, inputLabelY);
         restartButton.mousePressed(genPeople);

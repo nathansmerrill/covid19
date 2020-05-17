@@ -110,6 +110,7 @@ export default class Person {
                 p.fill(170, 198, 202);
             }
         }
+        // console.log(typeof this.pos.x);
         p.circle(this.pos.x, this.pos.y, 15);
     }
 }
