@@ -50,7 +50,7 @@ export default p => {
             setVarFunc(initialVal);
             input.input(() => setVarFunc(input.value()));
         }
-        inputDefaultVals.push([input, initialVal]);
+        inputDefaultVals.push([input, initialVal, setVarFunc]);
         const label = p.createElement('label', desc);
         label.position(80, inputLabelY);
         inputLabelY += 30;
@@ -83,9 +83,11 @@ export default p => {
         const resetButton = p.createButton('Reset configuration');
         resetButton.position(10, inputLabelY);
         resetButton.mousePressed(() => {
-            console.log(inputDefaultVals);
             for (let input of inputDefaultVals) {
                 input[0].value(input[1]);
+                if (input[2]) {
+                    input[2](input[1]);
+                }
             }
         });
         inputLabelY += 30;

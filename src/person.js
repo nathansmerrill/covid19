@@ -111,10 +111,10 @@ export default class Person {
                 p.fill(170, 198, 202);
             }
         }
-        if (this.id === 0) {
-            console.log(typeof this.pos.x);
-            console.log(this.pos.x);
-        }
+        // if (this.id === 0) {
+        //     console.log(typeof this.pos.x);
+        //     console.log(this.pos.x);
+        // }
         p.circle(this.pos.x, this.pos.y, 15);
     }
 }
