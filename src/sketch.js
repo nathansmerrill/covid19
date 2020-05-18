@@ -68,6 +68,7 @@ export default p => {
         [startingInfectedLabel, startingInfectedInput] = createInputLabel('Starting infected', 1);
         [borderWindThresholdLabel, borderWindThresholdInput] = createInputLabel('Border wind threshold', 100, val => borderWindThreshold = val);
         [borderWindStrengthLabel, borderWindStrengthInput] = createInputLabel('Border wind strength', .3, val => genWinds(val));
+        borderWindStrengthInput.attribute('disabled', 'true');
         [separationThresholdLabel, separationThresholdInput] = createInputLabel('Separation threshold', 50, val => separationThreshold = val);
         [separationStrengthLabel, separationStrengthInput] = createInputLabel('Separation strength', 10, val => separationStrength = val);
         [alignmentThresholdLabel, alignmentThresholdInput] = createInputLabel('Alignment threshold', 40, val => alignmentThreshold = val);
@@ -76,7 +77,7 @@ export default p => {
         [cohesionStrengthLabel, cohesionStrengthInput] = createInputLabel('Cohesion strength', .02, val => cohesionStrength = val);
         [speedLimitLabel, speedLimitInput] = createInputLabel('Speed limit', 4, val => speedLimit = val);
         [recoveryTimeLabel, recoveryTimeInput] = createInputLabel('Recovery time', 5000, val => recoveryTime = val);
-        [transmissionRateLabel, transmissionRateInput] = createInputLabel('Transmission rate', 100, val => transmissionRate = val);
+        // [transmissionRateLabel, transmissionRateInput] = createInputLabel('Transmission rate', 'f(dist) = 4/dist', val => transmissionRate = val);
         [deathRateLabel, deathRateInput] = createInputLabel('Death rate', .0001, val => deathRate = val);
 
         const resetButton = p.createButton('Reset configuration');
