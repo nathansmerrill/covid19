@@ -8,8 +8,9 @@
         "build": "parcel build src/index.html --public-url ./"
     },
     "dependencies": {
-        "babel-core": "^6.26.3",
-        "babel-preset-env": "^1.7.0",
+        "@babel/core": "^7.9.6",
+        "@babel/plugin-transform-instanceof": "^7.8.3",
+        "@babel/preset-env": "^7.9.6",
         "p5": "^1.0.0",
         "parcel-bundler": "^1.12.4",
         "parcel-plugin-clean-dist": "^0.0.6"

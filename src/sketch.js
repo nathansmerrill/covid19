@@ -34,10 +34,10 @@ export default p => {
         const startingInfected = startingInfectedInput.value();
         const maxSpawnVel = maxSpawnVelInput.value();
         for (let i = 0; i < 100 - startingInfected; i++) {
-            people.push(new Person(null, maxSpawnVel));
+            people.push(new Person(null, maxSpawnVel, i));
         }
         for (let i = 0; i < startingInfected; i++) {
-            people.push(new Person(new Date(), maxSpawnVel));
+            people.push(new Person(new Date(), maxSpawnVel, 99));
         }
     };
 
@@ -78,6 +78,7 @@ export default p => {
         [recoveryTimeLabel, recoveryTimeInput] = createInputLabel('Recovery time', 5000, val => recoveryTime = val);
         [transmissionRateLabel, transmissionRateInput] = createInputLabel('Transmission rate', 100, val => transmissionRate = val);
         [deathRateLabel, deathRateInput] = createInputLabel('Death rate', .0001, val => deathRate = val);
+
         const resetButton = p.createButton('Reset configuration');
         resetButton.position(10, inputLabelY);
         resetButton.mousePressed(() => {

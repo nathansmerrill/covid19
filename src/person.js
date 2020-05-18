@@ -4,9 +4,10 @@ import {randInt, randUniform} from "./utils";
 import {TRANSMISSION_RATE} from "./config";
 
 export default class Person {
-    constructor(infected, maxSpawnVel) {
+    constructor(infected, maxSpawnVel, id) {
         this.pos = new Point(randInt(0, innerWidth), randInt(0, innerHeight));
         this.vel = new Vector(randUniform(-maxSpawnVel, maxSpawnVel), randUniform(-maxSpawnVel, maxSpawnVel));
+        this.id = id;
         this.infected = infected;
         this.wasInfected = false;
     }
@@ -110,7 +111,10 @@ export default class Person {
                 p.fill(170, 198, 202);
             }
         }
-        // console.log(typeof this.pos.x);
+        if (this.id === 0) {
+            console.log(typeof this.pos.x);
+            console.log(this.pos.x);
+        }
         p.circle(this.pos.x, this.pos.y, 15);
     }
 }
